@@ -16,7 +16,6 @@ const useFetch = (url) => {
             })
             .then((launches) => {
                 setLaunches(launches)
-                console.log(launches)
                 setLoading(false)
             })
             .catch((error) => {
@@ -25,7 +24,7 @@ const useFetch = (url) => {
         })
     }, [url])
 
-    return launches;
+    return [launches, error, loading];
 }
 
 export default useFetch;
