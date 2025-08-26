@@ -21,42 +21,48 @@ export default function LaunTracker(){
     }
 
     return (
-        <div className="px-5 py-10">
-            <h1>Space-X-Launchers</h1>
-            {loading && (
-                <p>Loading......</p>
-            )}
-            <ul className="">
-                {currentLaunches.map((item, index) => {
-                return (
-                <li key={index} className="py-5">
-                    <h2>{item.name}</h2>
-                    <p>Date {new Date(item.date_utc).toLocaleDateString()}</p>
-                    <p>Launch Site: {item.launchpad}</p>
-                    <p>Details{item.details ? item.details : "No Details of this Launch"}</p>
-                    {item.links?.webcast && (  
-                        <a href={item.links.webcast} target="_blank" rel="noopener noreferrer">Watch Launch</a>
+        <div className="w-full flex items-center justify-center py-10 px-5">
+            <div className="space-y-5">
+                <h1 className="text-4xl font-bold">Space-X-Launchers</h1>
+                <p>
+                    {loading && (
+                        <p>Loading......</p>
                     )}
-                </li>
-                )
-                }) 
-            }
-            </ul>
-            {/* Pagination */}
-            <div>
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                    <button
-                        key={pageNumber}
-                        onClick={() => handleClick(pageNumber)}
-                        disabled={pageNumber === currentPage}
-                        className="border border-e-amber-700 px-2 py-1 mx-2"
-                    >{pageNumber}</button>
-                ))}
+                </p>
+                <ul className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                    {currentLaunches.map((item, index) => {
+                    return (
+                        <li key={index} className="p-3 rounded-md shadow-gray-200 bg-gray-200 shadow-md">
+                        {item.links?.patch.small && ( 
+                            <img src={item.links.patch.small} alt="rocket_img" className="mx-auto py-2"/>
+                        )}
+                        <h2 className="text-center text-2xl font-bold">{item.name}</h2>
+                        <p>Date {new Date(item.date_utc).toLocaleDateString()}</p>
+                        <p>Launch Site: {item.launchpad}</p>
+                        <p>Details{item.details ? item.details : "No Details of this Launch"}</p>
+                        {item.links?.webcast && (  
+                            <a href={item.links.webcast} target="_blank" rel="noopener noreferrer">Watch Launch</a>
+                        )}
+                    </li>
+                    )
+                    }) 
+                }
+                </ul>
+                {/* Pagination */}
+                <div className="flex items-center justify-center">
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                        <button
+                            key={pageNumber}
+                            onClick={() => handleClick(pageNumber)}
+                            disabled={pageNumber === currentPage}
+                            className="border border-e-amber-700 px-2 py-1 mx-2"
+                        >{pageNumber}</button>
+                    ))}
+                </div>
+                {error && (
+                    <p>Error: {error}</p>
+                )}
             </div>
-            {error && (
-                <p>Error: {error}</p>
-            )}
-            
         </div>
     )
 } 
