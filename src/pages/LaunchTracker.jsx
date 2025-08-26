@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useFetch from "../hooks/useFetch";
 
-
 export default function LaunTracker(){
     const [launches, error, loading] = useFetch('https://api.spacexdata.com/v4/launches')
     const [isActive, setIsActive] = useState(false)
