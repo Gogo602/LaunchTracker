@@ -1,10 +1,24 @@
+import { useState } from "react";
 import useFetch from "../hooks/useFetch";
-
 
 
 export default function LaunTracker(){
     const [launches, error, loading] = useFetch('https://api.spacexdata.com/v4/launches')
-    
+    const [currentPage, setCurrentPage] = useState(1)
+    const launchesPerPage = 10
+
+    const indexOfLastLaunch = currentPage * launchesPerPage
+    const indexOfFirstLaunch = indexOfLastLaunch - launchesPerPage
+    const currentLaunches = launches.slice(indexOfFirstLaunch, indexOfLastLaunch)
+    const totalPages = Math.ceil(launches.length / launchesPerPage)
+
+    const handleClick = (pageNumber) => {
+        setCurrentPage(pageNumber)
+        window.scrollTo({
+            top: 0,
+            behaviour: "smooth"
+        })
+    }
 
     return (
         <div className="px-5 py-10">
@@ -13,8 +27,7 @@ export default function LaunTracker(){
                 <p>Loading......</p>
             )}
             <ul className="">
-                {launches && 
-                launches.map((item, index) => {
+                {currentLaunches.map((item, index) => {
                 return (
                 <li key={index} className="py-5">
                     <h2>{item.name}</h2>
@@ -29,6 +42,17 @@ export default function LaunTracker(){
                 }) 
             }
             </ul>
+            {/* Pagination */}
+            <div>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                    <button
+                        key={pageNumber}
+                        onClick={() => handleClick(pageNumber)}
+                        disabled={pageNumber === currentPage}
+                        className="border border-e-amber-700 px-2 py-1 mx-2"
+                    >{pageNumber}</button>
+                ))}
+            </div>
             {error && (
                 <p>Error: {error}</p>
             )}
